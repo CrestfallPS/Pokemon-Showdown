@@ -530,6 +530,7 @@ exports.BattleMovedex = {
 		basePower: 120,
 		category: "Physical",
 		id: "buzzaxerampage",
+		isNonstandard: true,
 		isViable: true,
 		name: "Buzz Axe Rampage",
 		pp: 15,
@@ -621,7 +622,6 @@ exports.BattleMovedex = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		drain: [1, 2],
 		onPrepareHit: function (target, source) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Psyshock", target);
@@ -766,6 +766,7 @@ exports.BattleMovedex = {
 		category: "Special",
 		defensiveCategory: "Physical",
 		id: "cosmosray",
+		isNonstandard: true,
 		name: "Cosmos Ray",
 		pp: 20,
 		priority: 0,
@@ -921,6 +922,7 @@ exports.BattleMovedex = {
 		basePower: 90,
 		category: "Physical",
 		id: "doubleedgy",
+		isNonstandard: true,
 		name: "Double-Edgy",
 		pp: 15,
 		priority: 0,
@@ -1113,6 +1115,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Status",
 		id: "excuse",
+		isNonstandard: true,
 		isViable: true,
 		name: "Excuse",
 		pp: 10,
@@ -1547,22 +1550,8 @@ exports.BattleMovedex = {
 			if (ppData && ppData.pp) {
 				ppData.pp = Math.round(ppData.pp * 10 + this.random(3) + 5) / 10;
 			}
-			let moves = [];
-			for (let i in exports.BattleMovedex) {
-				let move = exports.BattleMovedex[i];
-				if (i !== move.id) continue;
-				if (move.isNonstandard) continue;
-				moves.push(move);
-			}
-			let randomMove = false;
-			if (moves.length) {
-				moves.sort((a, b) => a.num - b.num);
-				randomMove = moves[this.random(moves.length)].id;
-			}
-			if (!randomMove) {
-				return false;
-			}
-			this.useMove(randomMove, target);
+			const moves = Object.keys(exports.BattleMovedex);
+			this.useMove(moves[this.random(moves.length)], target);
 		},
 		onTryHit: function (target, source, effect) {
 			if (!source.isActive) return null;
@@ -1597,14 +1586,12 @@ exports.BattleMovedex = {
 					// Why not?
 					"shiny", "randomly", "'); DROP TABLE colors; --", "Ho-Oh", "blue screen",
 				];
-				let colorText = [];
-				let used = {};
-				for (let i = 0; i < this.random(3) + 1; i++) {
-					let dice = this.random(colors.length);
-					if (!(dice in used)) {
-						colorText.push(colors[dice]);
-						used[dice] = true;
-					}
+				const colorText = [];
+				const times = this.random(3) + 1;
+				for (let i = 0; i < times; i++) {
+					const dice = this.random(colors.length);
+					colorText.push(colors[dice]);
+					colors.splice(dice, 1);
 				}
 				this.add('-message', "Ho-Oh is now colored " + colorText.join(" and ") + "! As well as every other \u3069\u25C0mon.");
 			},
@@ -1656,8 +1643,8 @@ exports.BattleMovedex = {
 		priority: 0,
 		flags: {snatch: 1},
 		boosts: {
-			spe: 3,
-			atk: 3,
+			spe: 2,
+			atk: 2,
 		},
 		secondary: false,
 		target: "self",
@@ -2324,6 +2311,7 @@ exports.BattleMovedex = {
 		basePower: 100,
 		category: "Special",
 		id: "maelstrm",
+		isNonstandard: true,
 		name: "Maelström",
 		pp: 5,
 		priority: 0,
@@ -2563,6 +2551,7 @@ exports.BattleMovedex = {
 		basePower: 130,
 		category: "Physical",
 		id: "neattokick",
+		isNonstandard: true,
 		isViable: true,
 		name: "Neatto Kick",
 		pp: 10,
@@ -2704,6 +2693,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Status",
 		id: "ofcurse",
+		isNonstandard: true,
 		isViable: true,
 		name: "Of Curse",
 		pp: 40,
@@ -2737,7 +2727,7 @@ exports.BattleMovedex = {
 		target: "normal",
 		type: "Ghost",
 	},
-	// m00ns
+	// starry
 	oh: {
 		accuracy: 100,
 		category: "Status",
@@ -3030,6 +3020,7 @@ exports.BattleMovedex = {
 		basePower: 110,
 		category: "Special",
 		id: "postmortem",
+		isNonstandard: true,
 		name: "Postmortem",
 		pp: 10,
 		priority: 0,
@@ -3142,6 +3133,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Special",
 		id: "pureskill",
+		isNonstandard: true,
 		isViable: true,
 		name: "Pure Skill",
 		pp: 5,
@@ -3222,6 +3214,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Status",
 		id: "ragequit",
+		isNonstandard: true,
 		name: "Rage Quit",
 		pp: 40,
 		priority: 0,
@@ -3628,6 +3621,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Status",
 		id: "shitpostparadise",
+		isNonstandard: true,
 		name: "Shitpost Paradise",
 		pp: 10,
 		priority: 0,
@@ -3711,7 +3705,7 @@ exports.BattleMovedex = {
 			let moves = [];
 			for (let i = 0; i < pokemon.moveset.length; i++) {
 				let move = pokemon.moveset[i].id;
-				if (move && move !== 'sleeptalk') moves.push(move);
+				if (move && move !== 'sleepwalk') moves.push(move);
 			}
 			let move = '';
 			if (moves.length) move = moves[this.random(moves.length)];
@@ -3748,7 +3742,7 @@ exports.BattleMovedex = {
 		},
 		onAfterMoveSecondarySelf: function (source, target, move) {
 			if (move.hits && move.hits === 3 && toId(source.name) === 'scythernoswiping') {
-				this.add('c|+Scyther NO Swiping|Oh baby a triple!!!');
+				this.add('c|%Scyther NO Swiping|Oh baby a triple!!!');
 			}
 		},
 		onEffectiveness: function (typeMod) {
@@ -3837,12 +3831,16 @@ exports.BattleMovedex = {
 			'Fire', 'Flying', 'Ghost', 'Grass', 'Ground', 'Ice',
 			'Normal', 'Poison', 'Psychic', 'Rock', 'Steel', 'Water',
 		],
-		onPrepareHit: function (target, source) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, 'Tri Attack', target);
+		onPrepareHit: function (target, source, move) {
+			this.attrLastMove('[anim] Tri Attack');
+			move.types = move.typechart.slice();
+			Tools.shuffle(move.types);
+			move.types.splice(3);
+			this.add("c|@Ascriptmaster|Go! " + move.types.join(', ') + "! Spectrum Triplet Beam!!!");
+			move.hitcount = 0;
 		},
 		onTryHit: function (target, source, move) {
-			move.type = move.typechart[this.random(18)];
+			move.type = move.types[move.hitcount++];
 		},
 		willCrit: true,
 		ignoreImmunity: true,
@@ -3889,6 +3887,7 @@ exports.BattleMovedex = {
 		basePower: 0,
 		category: "Status",
 		id: "spikeyrain",
+		isNonstandard: true,
 		name: "SPIKEY RAIN",
 		pp: 10,
 		priority: 0,
@@ -4351,6 +4350,7 @@ exports.BattleMovedex = {
 		},
 		category: "Special",
 		id: "ultimatedismissal",
+		isNonstandard: true,
 		name: "Ultimate Dismissal",
 		pp: 10,
 		priority: 0,
